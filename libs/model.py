@@ -2,6 +2,8 @@ import numpy as np
 import tensorflow as tf
 from time import time
 
+from libs import settings
+
 
 class DeepBSDE(tf.keras.Model):
     def __init__(self, eq):
@@ -16,9 +18,9 @@ class DeepBSDE(tf.keras.Model):
                 self.eq.learning_boundaries, self.eq.learning_values)
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=lr, epsilon=1e-8)
         # initialize u(0,X_T)
-        self.Y_init = tf.Variable(np.random.uniform(eq.y_init[0], eq.y_init[1], size=[1]))
+        self.Y_init = tf.Variable(np.random.uniform(eq.y_init[0], eq.y_init[1], size=[1]).astype(settings.DTYPE))
         # initialize the gradient ∇u(0,X_T)
-        self.Z_init = tf.Variable(np.random.uniform(-.1, .1, size=(1, eq.D)))
+        self.Z_init = tf.Variable(np.random.uniform(-.1, .1, size=(1, eq.D)).astype(settings.DTYPE))
         # create neural networks for approximating Z_t, for all timesteps
         self.nets = [ self._create_nn() for _ in range(eq.S - 1) ]
 
@@ -60,9 +62,9 @@ class DeepBSDE(tf.keras.Model):
         """
         n_samples = X.shape[0]
         # approximate u(0,X_T)
-        y = tf.ones(shape=[n_samples, 1], dtype="float64") * self.Y_init
+        y = tf.ones(shape=[n_samples, 1], dtype=settings.DTYPE) * self.Y_init
         # approximate gradient ∇u(0,X_T)
-        z = tf.ones(shape=[n_samples, 1], dtype="float64") * self.Z_init
+        z = tf.ones(shape=[n_samples, 1], dtype=settings.DTYPE) * self.Z_init
         # approximate the backward process Y
         for i in range(self.eq.S - 1):
             t = self.t_space[i]
@@ -90,6 +92,7 @@ class DeepBSDE(tf.keras.Model):
 
         return loss
 
+    @tf.function(jit_compile=True)
     def _compute_grad(self, X, dW):
         """
         Gradient of the loss function w.r.t. the network parameters theta
@@ -116,7 +119,7 @@ class DeepBSDE(tf.keras.Model):
                         f"Time: {time() - s_time:5.1f}")
             X, dW = self.eq.forward_Xt(64)
 
-    @tf.function
+    @tf.function(jit_compile=True)
     def _train_step(self, X, dW):
         loss, grad = self._compute_grad(X, dW)
         self.optimizer.apply_gradients(zip(grad, self.trainable_variables))

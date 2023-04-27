@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
+from libs import settings
 
 class EuropeanCallSpread:
     def __init__(self):
@@ -26,9 +27,9 @@ class EuropeanCallSpread:
         Simulate the forward process X_t
         """
         # generate random variables ~ N(0,dt)
-        dW = np.random.standard_normal((n_paths, self.D, self.S)) * self.sqrt_dt
+        dW = np.random.standard_normal((n_paths, self.D, self.S)).astype(settings.DTYPE) * self.sqrt_dt
         # initialize the forward process X with initial value x
-        X = np.zeros((n_paths, self.D, self.S+1))
+        X = np.zeros((n_paths, self.D, self.S+1), dtype=settings.DTYPE)
         X[:,:,0] = np.ones((n_paths, self.D)) * self.x_init
         # simulate the forward process
         for i in range(self.S):
@@ -60,7 +61,7 @@ class EuropeanPut:
         self.S = 10                     # number of time intervals
         self.T = 1.0                    # final time
         self.sigma = 0.2                # volatility
-        self.y_init = [3,7]             # initial guess for put price
+        self.y_init = [1,3]             # initial guess for put price
         self.x_init = 100               # stock price at time 0
         self.r = 0.06                   # borrowing interest rate
         self.K = 100                    # strike price
@@ -75,9 +76,9 @@ class EuropeanPut:
         Simulate the forward process X_t
         """
         # generate random variables ~ N(0,dt)
-        dW = np.random.standard_normal((n_paths, self.D, self.S)) * self.sqrt_dt
+        dW = np.random.standard_normal((n_paths, self.D, self.S)).astype(settings.DTYPE) * self.sqrt_dt
         # initialize the forward process X with initial value x
-        X = np.zeros((n_paths, self.D, self.S+1))
+        X = np.zeros((n_paths, self.D, self.S+1), dtype=settings.DTYPE)
         X[:,:,0] = np.ones((n_paths, self.D)) * self.x_init
         # simulate the forward process
         for i in range(self.S):
