@@ -53,23 +53,23 @@ class EuropeanCallSpread:
         return -self.r1*tf.maximum(y - term, 0) + self.r2*tf.minimum(y - term, 0) - term*self.mu
 
 
-class EuropeanPutDiffRate:
+class EuropeanCallDiffRate:
     def __init__(self):
-        # 5.17
+        # 10.99
         self.D = 1                          # number of dimensions
         self.S = 10                         # number of time intervals
         self.T = 1.0                        # final time
         self.sigma = 0.2                    # volatility
-        self.y_init = [2,3]                 # initial guess for put price
+        self.y_init = [1,3]                 # initial guess for put price
         self.x_init = 100                   # stock price at time 0
-        self.r1 = 0.04                      # lending interest rate
+        self.r1 = 0.03                      # lending interest rate
         self.r2 = 0.06                      # borrowing interest rate
         self.K = 100                        # strike price
         self.mu = self.r2                   # risk-neutral, drift equal rate
         self.dt = self.T/self.S             # time step size
         self.sqrt_dt = np.sqrt(self.dt)     # time step size
         self.learning_boundaries = [2500]
-        self.learning_values = [7e-3, 5e-3]
+        self.learning_values = [5e-3, 5e-3]
 
     def forward_Xt(self, n_paths):
         """
@@ -91,6 +91,7 @@ class EuropeanPutDiffRate:
         """
         # x[:,:,-1] to get the value of x at terminal time
         obj = tf.reduce_max(x[:,:,-1], axis=1)
+        #return tf.maximum(obj - self.K, 0)
         return tf.maximum(self.K - obj, 0)
 
     def backward_f_tf(self, t, x, y, z):
