@@ -54,7 +54,7 @@ class EuropeanCallSpread:
 
 
 class EuropeanCallDiffRate:
-    def __init__(self,r1):
+    def __init__(self):
         # 10.99
         self.D = 1                          # number of dimensions
         self.S = 10                         # number of time intervals
@@ -62,7 +62,7 @@ class EuropeanCallDiffRate:
         self.sigma = 0.2                    # volatility
         self.y_init = [1,3]                 # initial guess for put price
         self.x_init = 100                   # stock price at time 0
-        self.r1 = float(r1)                      # lending interest rate
+        self.r1 = 0.03                      # lending interest rate
         self.r2 = 0.06                      # borrowing interest rate
         self.K = 100                        # strike price
         self.mu = self.r2                   # risk-neutral, drift equal rate
