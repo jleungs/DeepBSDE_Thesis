@@ -21,7 +21,7 @@ class EuropeanCallSpread:
         self.dt = self.T/self.S             # time step size
         self.sqrt_dt = np.sqrt(self.dt)     # time step size
         self.learning_boundaries = [2500]
-        self.learning_values = [7e-3, 5e-3]
+        self.learning_values = [5e-3, 5e-3]
 
     def forward_Xt(self, n_paths):
         """
@@ -34,7 +34,7 @@ class EuropeanCallSpread:
         X[:,:,0] = np.ones((n_paths, self.D)) * self.x_init
         # simulate the forward process
         for i in range(self.S):
-            X[:,:,i+1] = X[:,:,i] + X[:,:,i]*(self.mu*self.dt + self.sigma*dW[:,:,i])
+            X[:,:,i+1] = X[:,:,i]*np.exp((self.mu - (self.sigma**2)/2)*self.dt + self.sigma*dW[:,:,i])
         return X, dW
 
     def backward_g_tf(self, t, x):
@@ -82,7 +82,7 @@ class EuropeanCallDiffRate:
         X[:,:,0] = np.ones((n_paths, self.D)) * self.x_init
         # simulate the forward process
         for i in range(self.S):
-            X[:,:,i+1] = X[:,:,i] + X[:,:,i]*(self.mu*self.dt + self.sigma*dW[:,:,i])
+            X[:,:,i+1] = X[:,:,i]*np.exp((self.mu - (self.sigma**2)/2)*self.dt + self.sigma*dW[:,:,i])
         return X, dW
 
     def backward_g_tf(self, t, x):
@@ -130,7 +130,7 @@ class EuropeanPut:
         X[:,:,0] = np.ones((n_paths, self.D)) * self.x_init
         # simulate the forward process
         for i in range(self.S):
-            X[:,:,i+1] = X[:,:,i] + X[:,:,i]*(self.mu*self.dt + self.sigma*dW[:,:,i])
+            X[:,:,i+1] = X[:,:,i]*np.exp((self.mu - (self.sigma**2)/2)*self.dt + self.sigma*dW[:,:,i])
         return X, dW
 
     def backward_g_tf(self, t, x):
