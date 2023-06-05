@@ -30,7 +30,7 @@ $$
 $$
 
 \
-Three problems are implemented, `EuropeanPut`, `EuropeanCallDiffRate` and `EuropeanCallSpread`. To run, use the class name as an argument:
+Three problems are implemented, `EuropeanPut`, `EuropeanPutDiffRate` and `EuropeanCallSpread`. To run, use the class name as an argument:
 ```
 python3 deepbsde.py EuropeanCallSpread
 ```

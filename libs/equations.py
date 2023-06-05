@@ -53,7 +53,7 @@ class EuropeanCallSpread:
         return -self.r1*tf.maximum(y - term, 0) + self.r2*tf.minimum(y - term, 0) - term*self.mu
 
 
-class EuropeanCallDiffRate:
+class EuropeanPutDiffRate:
     def __init__(self):
         # 10.99
         self.D = 1                          # number of dimensions
