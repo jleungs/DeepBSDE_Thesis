@@ -38,4 +38,4 @@ python3 deepbsde.py EuropeanCallSpread
 Using `EuropeanCallSpread` for pricing European call spread options with different interest rates for borrowing and lending.
 
 ## Reference
-TODO
+1. Leung J. Exploring backward stochastic differential equations and deep learning for high-dimensional partial differential equations and European option pricing [Internet] [Dissertation]. 2023. Available from: https://urn.kb.se/resolve?urn=urn:nbn:se:mdh:diva-62879
